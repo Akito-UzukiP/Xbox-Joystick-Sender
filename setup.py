@@ -1,6 +1,6 @@
 """
-Setup script for building Xbox Controller GUI executable
-Uses PyInstaller to create a standalone executable
+Setup script for building Xbox Controller GUI executable - PyQt6 Version
+Uses PyInstaller to create a standalone executable with PyQt6 support
 """
 
 import os
@@ -10,14 +10,14 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def create_spec_file():
-    """Create PyInstaller spec file"""
+    """Create PyInstaller spec file for PyQt6"""
     spec_content = """
 # -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 a = Analysis(
-    ['joystick_gui.py'],
+    ['joystick_gui_pyqt.py'],
     pathex=[],
     binaries=[],
     datas=[
@@ -27,15 +27,27 @@ a = Analysis(
         'pygame.joystick',
         'pygame.mixer',
         'pygame.font',
+        'PyQt5.QtWidgets',
+        'PyQt5.QtCore',
+        'PyQt5.QtGui',
+        'PyQt5.sip',
+        'matplotlib.backends.backend_qt5agg',
+        'matplotlib.figure',
+        'matplotlib.backends._backend_agg',
+        'numpy',
+        'controller_visualization',
+        'message_bus_visualization',
+        'plotting_visualization'
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[
         'tkinter',
         'tkinter.ttk',
         'tkinter.messagebox',
         'tkinter.filedialog'
     ],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -67,24 +79,83 @@ exe = EXE(
 )
 """
     
-    with open('joystick_gui.spec', 'w') as f:
+    with open('joystick_gui_pyqt.spec', 'w') as f:
         f.write(spec_content.strip())
-    print("Created joystick_gui.spec")
+    print("Created joystick_gui_pyqt.spec for PyQt6")
+
+def check_dependencies():
+    """Check if all required dependencies are installed"""
+    print("Checking dependencies...")
+    
+    required_packages = [
+        ('PyQt5', 'PyQt5'),
+        ('pygame', 'pygame'),
+        ('matplotlib', 'matplotlib'),
+        ('numpy', 'numpy')
+    ]
+    
+    missing_packages = []
+    
+    for package_name, import_name in required_packages:
+        try:
+            __import__(import_name)
+            print(f"✓ {package_name} is installed")
+        except ImportError:
+            print(f"✗ {package_name} is missing")
+            missing_packages.append(package_name)
+    
+    if missing_packages:
+        print(f"\nMissing packages: {', '.join(missing_packages)}")
+        print("Please install them using:")
+        print("pip install -r requirements_pyqt.txt")
+        return False
+    
+    return True
+
+def create_requirements_file():
+    """Create updated requirements file for PyQt5"""
+    requirements_content = """PyQt5>=5.15.0
+pygame>=2.0.0
+matplotlib>=3.5.0
+numpy>=1.20.0
+pyinstaller>=5.0.0
+"""
+    
+    with open('requirements_pyqt.txt', 'w') as f:
+        f.write(requirements_content.strip())
+    print("Updated requirements_pyqt.txt")
 
 def main():
     """Main setup function"""
-    print("Xbox Controller GUI Setup")
-    print("=" * 30)
+    print("Xbox Controller GUI Setup - PyQt6 Version")
+    print("=" * 50)
+    
+    # Create updated requirements file
+    create_requirements_file()
+    
+    # Check dependencies
+    deps_ok = check_dependencies()
     
     # Create spec file
     create_spec_file()
     
     print("\nSetup complete!")
-    print("\nTo build the executable:")
-    print("1. Install requirements: pip install -r requirements.txt")
-    print("2. Install PyInstaller: pip install pyinstaller")
-    print("3. Build executable: pyinstaller joystick_gui.spec")
-    print("\nThe executable will be created in the 'dist' folder.")
+    print("\nNext steps:")
+    
+    if not deps_ok:
+        print("1. Install requirements: pip install -r requirements_pyqt6.txt")
+        print("2. After installation, run this setup again to verify")
+    else:
+        print("1. All dependencies are installed ✓")
+    
+    print("2. Build executable: pyinstaller joystick_gui_pyqt.spec")
+    print("3. The executable will be created in the 'dist' folder")
+    
+    print("\nNote: This setup is configured for PyQt6.")
+    print("If you need to use PyQt5, please use the legacy setup.")
+    
+    print("\nTo run the application directly:")
+    print("python joystick_gui_pyqt.py")
 
 if __name__ == "__main__":
     main()

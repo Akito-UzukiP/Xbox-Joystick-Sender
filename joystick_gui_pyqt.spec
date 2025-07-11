@@ -3,7 +3,7 @@
 block_cipher = None
 
 a = Analysis(
-    ['joystick_gui.py'],
+    ['joystick_gui_pyqt.py'],
     pathex=[],
     binaries=[],
     datas=[
@@ -13,15 +13,27 @@ a = Analysis(
         'pygame.joystick',
         'pygame.mixer',
         'pygame.font',
+        'PyQt5.QtWidgets',
+        'PyQt5.QtCore',
+        'PyQt5.QtGui',
+        'PyQt5.sip',
+        'matplotlib.backends.backend_qt5agg',
+        'matplotlib.figure',
+        'matplotlib.backends._backend_agg',
+        'numpy',
+        'controller_visualization',
+        'message_bus_visualization',
+        'plotting_visualization'
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[
         'tkinter',
         'tkinter.ttk',
         'tkinter.messagebox',
         'tkinter.filedialog'
     ],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,

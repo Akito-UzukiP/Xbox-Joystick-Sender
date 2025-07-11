@@ -14,7 +14,7 @@ echo Then run this script again.
 echo.
 
 echo Installing requirements...
-pip install -r requirements.txt
+pip install -r requirements_pyqt.txt
 if %errorlevel% neq 0 (
     echo Error installing requirements!
     pause
@@ -41,7 +41,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo Building executable...
-pyinstaller joystick_gui.spec
+pyinstaller joystick_gui_pyqt.spec
 if %errorlevel% neq 0 (
     echo Error building executable!
     pause
